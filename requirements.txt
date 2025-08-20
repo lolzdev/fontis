@@ -5,10 +5,12 @@ django-appconf==1.1.0
 django-compressor==4.5.1
 django-hosts==7.0.0
 django-libsass==0.9
+django-sass-processor==1.4.2
 libsass==0.23.0
 path==17.1.1
 pycparser==2.22
 pygit2==1.18.2
+pygments==2.19.2
 rcssmin==1.1.2
 rjsmin==1.2.2
 sqlparse==0.5.3

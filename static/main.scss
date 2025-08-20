@@ -1,10 +1,9 @@
-pre { line-height: 125%; }
-td.linenos .normal { color: #3c4354; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: #3c4354; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #3c4354; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .source .hll { background-color: #6e7681 }
-.source { background: #1d2331; color: #D4D2C8 }
 .source .c { color: #7E8AA1 } /* Comment */
 .source .err { color: #F88F7F } /* Error */
 .source .esc { color: #D4D2C8 } /* Escape */
@@ -84,16 +83,37 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
 .source .vm { color: #D4D2C8 } /* Name.Variable.Magic */
 .source .il { color: #DFBFFF } /* Literal.Number.Integer.Long */
 
+pre {
+    margin: 0;
+}
+.source {
+    padding-left: 0.5em;
+    overflow: scroll;
+}
+.source > pre > code > span {
+    display: block;
+    height: 1.25rem;
+    min-height: 1.25rem;
+}
+
 .content {
 	display: flex;
-	gap: 1.5em;
 	flex-direction: row;
+	background: #1d2331;
+	color: #D4D2C8;
 }
 
-.content .lines {
-	text-align: right;
+.number {
+    display: block;
+    text-align: right;
+    padding-right: 0.5em;
+    height: 1.25rem;
+    min-width: 3rem;
+}
+.number:hover {
+    background-color: #6e7681;
 }
 
-.lines::after {
-
+.border {
+    border-right: 1px solid #7E8AA1;
 }
