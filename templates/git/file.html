@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+{% load sass_tags %}
+
+<html>
+	<head>
+		<title>Fontis - git</title>
+		<link href="{% sass_src 'main.scss' %}" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div class="content source">
+		<pre class="lines">{{ lines }}</pre>
+		{{ content|safe }}
+		</div>
+	</body>
+</html>
+
