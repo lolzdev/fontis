@@ -24,8 +24,8 @@ podman==5.5.0
 prompt_toolkit==3.0.51
 pycparser==2.22
 pygit2==1.18.2
-Pygments==2.19.2
 python-dateutil==2.9.0.post0
+pygments==2.19.2
 rcssmin==1.1.2
 redis==6.4.0
 requests==2.32.5

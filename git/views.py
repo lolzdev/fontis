@@ -48,7 +48,8 @@ def tree_file(request, repo, path):
     index.read()
     content = repo[index[path].id].data
     line_count = len(repo[index[path].id].data.splitlines())
+    # TODO(ernesto): use the optimal formatter
     lexer = get_lexer_by_name("zig", stripall=True)
-    formatter = HtmlFormatter(lineos=True, cssclass="source");
+    formatter = HtmlFormatter(cssclass = 'source', wrapcode = True, linespans = 'line')
 
-    return render(request, 'git/file.html', {'content': highlight(content, lexer, formatter), 'lines': '\n'.join(map(str, range(1, line_count+1)))})
+    return render(request, 'git/file.html', {'content': highlight(content, lexer, formatter), 'lines': range(1, line_count+1) })
