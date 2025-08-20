@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+{% load sass_tags %}
+
+<html>
+  <head>
+    <title>Fontis - git</title>
+    <link href="{% sass_src 'main.scss' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+	{% for file in files %}
+		<div class="file-diff">
+			<div class="file-header">
+    			{{ file.old_path }} → {{ file.new_path }}
+    		</div>
+    	{% for hunk in file.hunks %}
+      		<div class="hunk-header">{{ hunk.header }}</div>
+      			<table class="diff-table">
+        			{% for line in hunk.lines %}
+          				<tr class="
+							{% if line.origin == '+' %}added{% elif line.origin == '-' %}removed{% else %}context{% endif %}">
+							<td class="lineno old">{{ line.old_lineno|default:"" }}</td>
+							<td class="lineno new">{{ line.new_lineno|default:"" }}</td>
+							<td class="code"><span class="highlight">{{ line.content|safe }}</span></td>
+						</tr>
+					{% endfor %}
+				</table>
+				{% endfor %}
+			  </div>
+	{% endfor %}
+	</body>
+</html>
+
+<style>
+body {
+    background-color: #1d2331;
+    color: #c9d1d9;
+    font-family: monospace;
+}
+
+.file-header {
+    font-weight: bold;
+    background: #2d3347;
+    padding: 6px;
+    border: 1px solid #3d4460;
+    margin-top: 10px;
+}
+
+.hunk-header {
+    font-family: monospace;
+    background: #2d3347;
+    padding: 4px;
+    border-left: 3px solid #999;
+}
+
+.diff-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.diff-table td {
+    padding: 2px 6px;
+    vertical-align: top;
+    white-space: pre;
+}
+
+.lineno {
+    width: 40px;
+    text-align: right;
+    color: #999;
+    background: #1d2331;
+}
+
+tr.added td.code {
+    background: #2b3b42;
+    color: #a6e22e;
+}
+
+tr.removed td.code {
+    background: #4b1d1f;
+    color: #f92672;
+}
+
+tr.context td.code {
+    background: #1d2331;
+    color: #c9d1d9;
+}
+</style>

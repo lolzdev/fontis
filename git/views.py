@@ -12,7 +12,7 @@ import pygit2
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_by_name
+from pygments.lexers import guess_lexer_for_filename
 from pygments.styles import get_style_by_name
 
 def get_repo(name):
@@ -48,8 +48,57 @@ def tree_file(request, repo, path):
     index.read()
     content = repo[index[path].id].data
     line_count = len(repo[index[path].id].data.splitlines())
-    # TODO(ernesto): use the optimal formatter
-    lexer = get_lexer_by_name("zig", stripall=True)
-    formatter = HtmlFormatter(cssclass = 'source', wrapcode = True, linespans = 'line')
+    try:
+        lexer = guess_lexer_for_filename(path, "")
+    except Exception:
+        from pygments.lexers import TextLexer
+        lexer = TextLexer()
+    formatter = HtmlFormatter(cssclass = 'source', wrapcode = True, linespans = 'line', style='monokai')
 
-    return render(request, 'git/file.html', {'content': highlight(content, lexer, formatter), 'lines': range(1, line_count+1) })
+    css = formatter.get_style_defs('.source')
+    print(css)
+    return render(request, 'git/file.html', {'content': highlight(content, lexer, formatter), 'lines': range(1, line_count+1), 'pygments_css': css})
+
+def diff(request, repo):
+    repo = get_repo(repo)
+    first = request.GET.get('first')
+    second = request.GET.get('second')
+
+    old_commit = repo.revparse_single(first)
+    new_commit = repo.revparse_single(second)
+
+    diff = repo.diff(old_commit.tree, new_commit.tree)
+    formatter = HtmlFormatter(style="monokai", nowrap=True, noclasses=True)
+    files = []
+
+    for patch in diff:
+        lexer = guess_lexer_for_filename(patch.delta.new_file.path, "")
+        try:
+            lexer = guess_lexer_for_filename(patch.delta.new_file.path, "")
+        except Exception:
+            from pygments.lexers import TextLexer
+            lexer = TextLexer()
+
+        file_diff = {
+            "old_path": patch.delta.old_file.path,
+            "new_path": patch.delta.new_file.path,
+            "hunks": []
+        }
+
+        for hunk in patch.hunks:
+            hunk_lines = []
+            for line in hunk.lines:
+                hunk_lines.append({
+                    "origin": line.origin,
+                    "old_lineno": line.old_lineno,
+                    "new_lineno": line.new_lineno,
+                    "content": highlight(line.content, lexer, formatter)
+                })
+            file_diff["hunks"].append({
+                "header": f"@@ -{hunk.old_start},{hunk.old_lines} +{hunk.new_start},{hunk.new_lines} @@",
+                "lines": hunk_lines
+            })
+
+        files.append(file_diff)
+
+    return render(request, "git/diff.html", {"files": files})

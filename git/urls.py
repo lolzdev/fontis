@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 
-from .views import index, repo, tree_file
+from .views import index, repo, tree_file, diff
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
     path('<slug:name>/', repo),
     re_path(r'^(?P<repo>[^/]+)/tree/(?P<path>.*)$', tree_file),
+    re_path(r'^(?P<repo>[^/]+)/diff', diff),
 ]
