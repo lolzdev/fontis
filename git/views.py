@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from django.http import HttpResponse
 
 from .models import Repo
@@ -40,7 +39,6 @@ def index(request):
 def repo(request, name):
     repo = get_repo(name)
     index = repo.index
-    #messages = [repo[index[m].id].data for m in walk_repo_files(repo, "master")]
 
     return render(request, 'git/repository.html', {})
 

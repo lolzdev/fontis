@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Script, ScriptResult
+
+admin.site.register(Script)
+admin.site.register(ScriptResult)

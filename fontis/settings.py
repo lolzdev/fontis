@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django_hosts',
     'sass_processor',
     'git',
+    'builds',
+    'hub',
+    'celery',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +142,9 @@ ROOT_HOSTCONF = 'fontis.hosts'
 DEFAULT_HOST = 'git'
 
 REPOS_PATH="~/src"
+CI_LOGS_PATH="~/.local/share/logs"
+
+PODMAN_URL="unix:///run/user/1000/podman/podman.sock"
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_TIMEZONE = 'UTC'
