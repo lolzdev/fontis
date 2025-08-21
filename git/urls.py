@@ -22,7 +22,7 @@ from .views import index, repo, tree_file, diff
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
-    path('<slug:name>/', repo),
-    re_path(r'^(?P<repo>[^/]+)/tree/(?P<ref>[^/]+)/(?P<path>.*)$', tree_file),
+    path('<slug:name>/', repo, name='repoview'),
+    re_path(r'^(?P<reponame>[^/]+)/tree/(?P<ref>[^/]+)/(?P<path>.*)$', tree_file, name='fileview'),
     re_path(r'^(?P<repo>[^/]+)/diff', diff),
 ]

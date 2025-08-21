@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
+from django.urls import reverse
+from datetime import datetime
 
 from .models import Repo
 
@@ -37,11 +39,10 @@ def repo(request, name):
 
     return render(request, 'git/repository.html', {})
 
-def tree_file(request, repo, ref, path):
-    repo = get_repo(repo)
+def tree_file(request, reponame, ref, path):
+    repo = get_repo(reponame)
     index = repo.index
     index.read()
-
     obj = get_file(repo, ref, path)
 
     if not isinstance(obj, pygit2.Blob):
@@ -56,9 +57,30 @@ def tree_file(request, repo, ref, path):
         lexer = TextLexer()
     formatter = HtmlFormatter(cssclass = 'source', wrapcode = True, linespans = 'line', style='monokai')
 
-    css = formatter.get_style_defs('.source')
-    print(css)
-    return render(request, 'git/file.html', {'content': highlight(content, lexer, formatter), 'lines': range(1, line_count+1), 'pygments_css': css})
+    splitpath = path.split(os.sep)
+    filepath = [{
+        'name': reponame,
+        'url': reverse('repoview', kwargs={'name': reponame})
+    }] + [{
+        'name': t,
+        'url': reverse('fileview', kwargs={'reponame': reponame, 'ref': ref, 'path': os.sep.join(splitpath[:i+1])}),
+    } for i,t in enumerate(splitpath)]
+
+    commit = repo.get(repo.head.target)
+
+    return render(request, 'git/file.html', {
+        'content': highlight(content, lexer, formatter),
+        'lines': range(1, line_count+1),
+        'filedirs': filepath[:-1],
+        'filename': splitpath[-1],
+        'filesize': len(content),
+        'commit': {
+            'hash': str(commit.id)[:8],
+            'author': commit.author.name,
+            'message': commit.message,
+            'time': datetime.fromtimestamp(commit.commit_time)
+        }
+    })
 
 def tree_dir(obj):
     return HttpResponse("dir")

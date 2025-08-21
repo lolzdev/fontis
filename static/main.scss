@@ -1,6 +1,17 @@
+body {
+    font-family: sans-serif;
+    background: #1d2331;
+    color: #D4D2C8;
+}
 a {
     text-decoration: none;
     color: inherit;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .source .hll { background-color: #6e7681 }
@@ -83,12 +94,151 @@ a {
 .source .vm { color: #D4D2C8 } /* Name.Variable.Magic */
 .source .il { color: #DFBFFF } /* Literal.Number.Integer.Long */
 
-pre {
-    margin: 0;
+.rounded-border {
+    border: 1px solid #D4D2C8;
+    border-radius: .5em;
 }
+
+.toppart {
+    margin: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.path {
+    font-size: 1rem;
+    font-weight: 600;
+}
+.path a {
+    color: #73D0FF;
+}
+.path .sep {
+    font-weight: 350;
+}
+
+.file {
+    border-radius: 0.5em;
+    border: 2px solid #D4D2C8;
+    margin: 1em;
+}
+.commit {
+    margin: 1em;
+    border-radius: .5em;
+    padding: .5em;
+    border: 1px solid #D4D2C8;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.commit .human-info {
+    display: flex;
+    flex-direction: column;
+}
+.commit .human-info a {
+    font-size: 1rem;
+    font-weight: 500;
+}
+.commit .human-info span {
+    font-size: 0.75rem;
+    font-weight: 350;
+}
+.commit .machine-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.commit .machine-info div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.commit .machine-info div span {
+    margin-left: .5em;
+    padding-right: .5em;
+    border-right: 1px solid #D4D2C8;
+    font-family: monospace;
+}
+.commit .machine-info div button {
+    border: none;
+    background: inherit;
+    color: inherit;
+    width: 1.75em;
+    padding: .2em .2em 0 .2em;
+    border-radius: 0 .5em .5em 0;
+    cursor: pointer;
+}
+.commit .machine-info div button:hover {
+    background: #6e7681;
+}
+.commit .machine-info .history {
+    margin: 0 .2em;
+    border-radius: .5em;
+    padding: .2em .3em;
+    cursor: pointer;
+}
+.commit .machine-info .history:hover {
+    background: #6e7681;
+}
+.commit .machine-info .history svg {
+    width: 1em;
+    // TODO(ernesto): This is hacky as fuck
+    vertical-align: sub;
+}
+.bottompart {
+    padding: .5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #D4D2C8;
+    border-radius: .5em .5em 0 0;
+    //position: sticky;
+    //top: 3rem;
+    background: #1d2331;
+}
+.info .tab {
+    display: inline-block;
+    margin-right: .5em;
+}
+.tab a {
+    padding: 0 .5em;
+}
+.tab .selected {
+    background: #6e7681;
+}
+.filesize {
+    font-weight: 350;
+    font-family: monospace;
+}
+.actions {
+    display: flex;
+    flex-direction: row;
+}
+.actions button {
+    border: none;
+    background: inherit;
+    color: inherit;
+    width: 2em;
+    border-right: 1px solid #D4D2C8;
+    padding: .2em;
+    padding-bottom: 0;
+    cursor: pointer;
+}
+.actions button:hover {
+    background: #6e7681;
+}
+.actions button:first-child {
+    border-radius: .5em 0 0 .5em;
+}
+.actions button:last-child {
+    border: none;
+    border-radius: 0 .5em .5em 0;
+}
+
 .source {
     padding-left: 0.5em;
-    overflow: scroll;
+    overflow-x: scroll;
 }
 .source > pre > code > span {
     display: block;
@@ -99,8 +249,7 @@ pre {
 .content {
 	display: flex;
 	flex-direction: row;
-	background: #1d2331;
-	color: #D4D2C8;
+	font-family: monospace;
 }
 
 .number {
