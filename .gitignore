@@ -209,6 +209,5 @@ __marimo__/
 
 **/*.map
 **/*.css
-builds/migrations/
-git/migrations/
-hub/migrations/
+builds/migrations/*
+git/migrations/*

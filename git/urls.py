@@ -23,6 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
     path('<slug:name>/', repo),
-    re_path(r'^(?P<repo>[^/]+)/tree/(?P<path>.*)$', tree_file),
+    re_path(r'^(?P<repo>[^/]+)/tree/(?P<ref>[^/]+)/(?P<path>.*)$', tree_file),
     re_path(r'^(?P<repo>[^/]+)/diff', diff),
 ]

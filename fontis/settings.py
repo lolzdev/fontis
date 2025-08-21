@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'sass_processor',
     'git',
     'builds',
-    'hub',
     'celery',
 ]
 

@@ -1,12 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.conf import settings
 
 from .models import Repo
 
-from django.conf import settings
-
 import os
-
 import pygit2
 
 from pygments import highlight
@@ -19,19 +17,16 @@ def get_repo(name):
     repo_obj = Repo.objects.get( name = name )
     return pygit2.Repository(os.path.expandvars(os.path.expanduser(os.path.join(settings.REPOS_PATH, repo_obj.path))))
 
-def walk_repo_files(repo, branch):
-    tree = repo.revparse_single(branch).tree
-    trees_and_paths = [(tree, [])]
-    while len(trees_and_paths) != 0:
-        tree, path = trees_and_paths.pop() # take the last entry
-        for entry in tree:
-            if entry.filemode == pygit2.GIT_FILEMODE_TREE:
-                next_tree = repo.get(entry.id)
-                next_path = list(path)
-                next_path.append(entry.name)
-                trees_and_paths.append((next_tree, next_path,))
-            else:
-                yield os.path.join(*path, entry.name)
+def get_file(repo, ref, path):
+    commit = repo.revparse_single(ref)
+    path = os.path.normpath(path)
+    sub = path.split('/')
+    obj = commit.tree
+    if sub[0] == '.':
+        return obj
+    for path in sub:
+        obj = obj[path]
+    return obj
 
 def index(request):
     return render(request, 'git/index.html', {})
@@ -42,12 +37,18 @@ def repo(request, name):
 
     return render(request, 'git/repository.html', {})
 
-def tree_file(request, repo, path):
+def tree_file(request, repo, ref, path):
     repo = get_repo(repo)
     index = repo.index
     index.read()
-    content = repo[index[path].id].data
-    line_count = len(repo[index[path].id].data.splitlines())
+
+    obj = get_file(repo, ref, path)
+
+    if not isinstance(obj, pygit2.Blob):
+        return tree_dir(obj)
+
+    content = obj.data
+    line_count = len(obj.data.splitlines())
     try:
         lexer = guess_lexer_for_filename(path, "")
     except Exception:
@@ -58,6 +59,9 @@ def tree_file(request, repo, path):
     css = formatter.get_style_defs('.source')
     print(css)
     return render(request, 'git/file.html', {'content': highlight(content, lexer, formatter), 'lines': range(1, line_count+1), 'pygments_css': css})
+
+def tree_dir(obj):
+    return HttpResponse("dir")
 
 def diff(request, repo):
     repo = get_repo(repo)

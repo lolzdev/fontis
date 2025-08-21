@@ -23,7 +23,11 @@ class Command(BaseCommand):
 
         script = Script.objects.get( repository = repo_obj, name = options["script"] )
 
+        result = ScriptResult(commit = options["commit"], branch = options["branch"], status = "RN", script = script)
+        result.save()
+
         with PodmanClient(base_url=settings.PODMAN_URL) as client:
+
             client.images.pull(script.image)
             container = client.containers.create(
                 script.image,
@@ -38,9 +42,10 @@ class Command(BaseCommand):
             if exit_code != 0:
                 status = "FL"
 
-            logs = "".join(chunk.decode() for chunk in container.logs(stdout=True, stderr=True))
-            result = ScriptResult(commit = options["commit"], branch = options["branch"], status = status, script = script)
+            result.status = status;
             result.save()
+
+            logs = "".join(chunk.decode() for chunk in container.logs(stdout=True, stderr=True))
             with open(os.path.expandvars(os.path.expanduser(os.path.join(settings.CI_LOGS_PATH, str(result.id)))), "w", encoding="utf-8") as f:
                 f.write(logs)
                 f.close()

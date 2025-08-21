@@ -17,6 +17,7 @@ class Script(models.Model):
 class ScriptResult(models.Model):
     class Status(models.TextChoices):
         SUCCESS = 'SC', ("Success")
+        RUNNING = 'RN', ("Running")
         FAILED = 'FL', ("Failed")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
